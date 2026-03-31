@@ -36,3 +36,9 @@ npm install && npm run build
 ## Uso en Claude Chat (claude.ai)
 
 Agregar como MCP server remoto o local con la misma configuración del `~/.claude.json`.
+
+## Atribución
+
+Este proyecto usa la [Semantic Scholar Academic Graph API](https://www.semanticscholar.org/product/api). Datos académicos proporcionados por Semantic Scholar.
+
+> Kinney, R. et al. "The Semantic Scholar Open Data Platform." ArXiv, abs/2301.10140, 2023.

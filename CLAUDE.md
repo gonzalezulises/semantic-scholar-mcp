@@ -2,24 +2,18 @@
 
 ## Estado del proyecto
 
-- **Estado**: Funcional, pendiente API key
+- **Estado**: Completo ✓
+- **API key**: Configurada en `~/.claude.json` (2026-03-31)
 - **Última sesión**: 2026-03-31
 - **Repo**: github.com/gonzalezulises/semantic-scholar-mcp
 - **Local**: ~/Documents/GitHub/semantic-scholar-mcp
 
-## Pendiente: configurar API key
+## Atribución requerida
 
-El API key fue solicitado a Semantic Scholar (2026-03-31). Cuando el usuario proporcione la key:
+Semantic Scholar requiere atribución en materiales publicados. Citar:
+> Kinney et al. "The Semantic Scholar Open Data Platform." 2023.
 
-1. Agregar a `~/.claude.json` en `mcpServers.semantic-scholar.env`:
-   ```json
-   "env": {
-     "SEMANTIC_SCHOLAR_API_KEY": "la-key-aquí"
-   }
-   ```
-2. Reiniciar Claude Code para que el MCP server cargue con la key
-3. Verificar que funciona ejecutando una búsqueda de prueba con `search_papers`
-4. Actualizar este archivo: cambiar estado a "Completo"
+Al generar contenido que use datos de S2, incluir al final: "Datos académicos proporcionados por Semantic Scholar."
 
 ## Arquitectura
 
