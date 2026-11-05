@@ -1,16 +1,18 @@
 version: 2
 
 # Este repo no tenia .github/dependabot.yml, asi que solo recibia actualizaciones de
-# seguridad: una por vulnerabilidad, sin agrupar y sin nada que las cerrara. De ahi salieron
-# 152 PRs abiertos repartidos en 35 repos.
+# seguridad: una por vulnerabilidad, sin agrupar y sin nada que las cerrara.
 #
-# `applies-to: security-updates` las colapsa en un PR por tanda. El `cooldown` no sirve aqui:
-# por diseno de GitHub no aplica a las actualizaciones de seguridad.
+# `applies-to: security-updates` las colapsa en un PR por tanda. El `cooldown` no sirve
+# aqui: por diseno de GitHub no aplica a las actualizaciones de seguridad.
 #
 # `open-pull-requests-limit: 0` apaga las actualizaciones de *version* y deja pasar las de
-# seguridad. Es deliberado: este repo no tiene un check requerido que construya el proyecto,
-# asi que un bump de version no tendria quien lo verifique y volveria a acumularse. Las de
-# version se encienden cuando el repo tenga su compuerta de CI.
+# seguridad. Es deliberado: este repo no tiene un check requerido que construya el
+# proyecto, asi que un bump de version no tendria quien lo verifique y la cola volveria a
+# llenarse. Se encienden cuando el repo tenga su compuerta de CI.
+#
+# No hay entrada `github-actions`: este repo no tiene .github/workflows, y Dependabot
+# aborta el job con "/action.yml or /.github/workflows/<anything>.yml not found".
 updates:
   - package-ecosystem: npm
     directory: "/"
@@ -23,8 +25,3 @@ updates:
         applies-to: security-updates
         patterns:
           - "*"
-
-  - package-ecosystem: github-actions
-    directory: "/"
-    schedule:
-      interval: monthly
