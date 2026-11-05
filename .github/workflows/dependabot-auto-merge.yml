@@ -1,0 +1,43 @@
+name: Dependabot auto-merge
+
+# Patch y minor se fusionan solos cuando los checks requeridos del ruleset pasan.
+# Los majors esperan a una persona. Patrón documentado por GitHub
+# (docs.github.com → "Automating Dependabot with GitHub Actions").
+#
+# `pull_request_target` y no `pull_request`: en un PR de Dependabot el GITHUB_TOKEN de
+# `pull_request` es de solo lectura y no puede fusionar. `pull_request_target` corre en el
+# contexto de la rama base, donde el bloque `permissions` de abajo sí aplica. Es seguro porque
+# este workflow NO hace checkout del código del PR: solo lee metadatos y pide la fusión.
+#
+# Este repo despliega por la integración de Git de Vercel, que escucha el webhook de push, no un
+# workflow de Actions. Por eso GITHUB_TOKEN alcanza y no hace falta un PAT: la limitación de
+# GITHUB_TOKEN es que no dispara otros *workflows*, no que no dispare el despliegue.
+on:
+  pull_request_target:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Metadatos del bump
+        id: md
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Activar auto-merge (patch y minor)
+        # Solo npm (fetch-metadata lo reporta como `npm_and_yarn`): un bump de una acción de
+        # terceros corre después con secretos de producción y merece ojos humanos aunque sea patch.
+        if: >-
+          contains(fromJSON('["npm","npm_and_yarn"]'), steps.md.outputs.package-ecosystem) &&
+          (steps.md.outputs.update-type == 'version-update:semver-patch' ||
+           steps.md.outputs.update-type == 'version-update:semver-minor')
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr merge --auto --squash "$PR_URL"

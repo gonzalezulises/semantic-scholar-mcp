@@ -1,0 +1,37 @@
+name: CI
+
+# Compuerta minima: si el proyecto no instala y no construye, el PR no entra.
+#
+# `npm install` y no `npm ci`, a proposito. `npm ci` instala el lockfile tal cual y tolera
+# un arbol de peers incoherente; Vercel construye con `npm install`, que re-resuelve. Ese
+# hueco dejo pasar el 2026-11-05 un bump que rompio un build de produccion con ERESOLVE
+# teniendo el CI en verde.
+#
+# `workflow_dispatch` existe para poder comprobar esta compuerta en la rama por defecto
+# antes de declararla check requerido: un check requerido que nunca se vio verde bloquea
+# todos los merges del repo.
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Instalar como instala Vercel
+        run: npm install --no-audit --no-fund
+
+      - name: Construir
+        run: npm run build
