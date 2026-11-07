@@ -2,10 +2,15 @@ name: CI
 
 # Compuerta minima: si el proyecto no instala y no construye, el PR no entra.
 #
-# `npm install` y no `npm ci`, a proposito. `npm ci` instala el lockfile tal cual y tolera
-# un arbol de peers incoherente; Vercel construye con `npm install`, que re-resuelve. Ese
-# hueco dejo pasar el 2026-11-05 un bump que rompio un build de produccion con ERESOLVE
-# teniendo el CI en verde.
+# `npm install` y no `npm ci`, a proposito: Vercel construye con `npm install`, asi que la
+# compuerta instala igual que produccion. El 2026-11-05 un bump llego verde al CI y rompio un
+# build de produccion con ERESOLVE; por eso la compuerta replica el instalador real.
+#
+# Correccion del 2026-11-07: este comentario afirmaba que `npm ci` "tolera un arbol de peers
+# incoherente". Es falso. Con react 19 y react-dom 18.3.1 en el lockfile, `npm ci` sale
+# ERESOLVE igual que `npm install` (verificado en npm 10 y en npm 11). La diferencia real es
+# otra: `npm ci` aborta con EUSAGE si el lockfile no cuadra con el package.json, mientras
+# `npm install` los reconcilia y reescribe el lockfile.
 #
 # `workflow_dispatch` existe para poder comprobar esta compuerta en la rama por defecto
 # antes de declararla check requerido: un check requerido que nunca se vio verde bloquea
