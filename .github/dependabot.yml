@@ -15,6 +15,9 @@ version: 2
 # aborta el job con "/action.yml or /.github/workflows/<anything>.yml not found".
 updates:
   - package-ecosystem: npm
+    # Siete días de madurez antes de proponer una versión.
+    cooldown:
+      default-days: 7
     directory: "/"
     schedule:
       interval: weekly
