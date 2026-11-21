@@ -15,17 +15,25 @@ MCP server que expone la API de Semantic Scholar como tools para Claude Code y C
 | `search_authors` | Búsqueda de autores académicos |
 | `batch_papers` | Detalles de hasta 500 papers en una llamada |
 
-## Setup
+## Instalación
 
 ```bash
-# Build
-cd ~/Documents/GitHub/semantic-scholar-mcp
+git clone https://github.com/gonzalezulises/semantic-scholar-mcp.git
+cd semantic-scholar-mcp
 npm install && npm run build
+```
 
-# Ya registrado en Claude Code (scope: user)
-# Para API key dedicada (opcional, mejora rate limits):
-# Editar ~/.claude.json → mcpServers.semantic-scholar.env:
-#   "SEMANTIC_SCHOLAR_API_KEY": "tu-key"
+Registrarlo en Claude Code (desde la carpeta del repo):
+
+```bash
+claude mcp add semantic-scholar --scope user -- node "$PWD/dist/index.js"
+```
+
+Con API key propia (opcional, mejora el límite de peticiones):
+
+```bash
+claude mcp add semantic-scholar --scope user \
+  -e SEMANTIC_SCHOLAR_API_KEY=tu-key -- node "$PWD/dist/index.js"
 ```
 
 ## Rate limits
@@ -33,12 +41,28 @@ npm install && npm run build
 - Sin API key: ~1 req/s compartido (puede dar 429)
 - Con API key (gratis): 1 req/s dedicado — solicitar en semanticscholar.org/product/api
 
-## Uso en Claude Chat (claude.ai)
+## Uso en Claude Desktop
 
-Agregar como MCP server remoto o local con la misma configuración del `~/.claude.json`.
+Agrega el servidor en `claude_desktop_config.json` con la ruta absoluta a `dist/index.js`:
+
+```json
+{
+  "mcpServers": {
+    "semantic-scholar": {
+      "command": "node",
+      "args": ["/ruta/a/semantic-scholar-mcp/dist/index.js"],
+      "env": { "SEMANTIC_SCHOLAR_API_KEY": "tu-key" }
+    }
+  }
+}
+```
 
 ## Atribución
 
 Este proyecto usa la [Semantic Scholar Academic Graph API](https://www.semanticscholar.org/product/api). Datos académicos proporcionados por Semantic Scholar.
 
 > Kinney, R. et al. "The Semantic Scholar Open Data Platform." ArXiv, abs/2301.10140, 2023.
+
+## Licencia
+
+[MIT](LICENSE)
